@@ -1,0 +1,18 @@
+@(persons: List[Person], personForm: Form[models.Person])
+
+@import helper._
+
+@main("Todo list") {
+
+    <h1>@persons.size person(s)</h1>
+
+    <ul>
+        @persons.map { person =>
+        <li>
+            @person.firstName @person.lastName @person.team @person.position
+        </li>
+        }
+    </ul>
+
+
+}
