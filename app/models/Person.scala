@@ -26,8 +26,4 @@ object Person {
       "position" -> t.position
     )
   }
-
-  def all() = {
-    Repository.persons
-  }
 }

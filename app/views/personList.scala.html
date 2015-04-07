@@ -1,0 +1,16 @@
+@(persons: List[Person])
+
+@import helper._
+
+@main("Persons") {
+
+    <h1>@persons.size person(s)</h1>
+
+    <ul>
+        @persons.map { person =>
+        <li>
+            @person.firstName @person.lastName @person.team @person.position
+        </li>
+        }
+    </ul>
+}

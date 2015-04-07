@@ -1,6 +1,6 @@
 package controllers
 
-import models.Person
+import models.{Repository, Person}
 import play.api.data.Forms._
 import play.api.data.Form
 import play.api.mvc._
@@ -16,10 +16,28 @@ object Application extends Controller {
     Ok("Hello World!")
   }
 
-  def persons = Action.async { implicit request =>
-    Person.all().map { persons =>
-      Ok(views.html.index(persons, personForm))
+  def teams = Action.async { implicit request =>
+    Repository.teams.map { teams =>
+      Ok(views.html.newPerson(personForm, teams))
     }
+  }
+
+  def persons = Action.async { implicit request =>
+    Repository.persons.map { persons =>
+      Ok(views.html.personList(persons))
+    }
+  }
+
+  def newPerson = Action.async { implicit request =>
+    Repository.teams.map { teams =>
+      Ok(views.html.newPerson(personForm, teams))
+    }
+  }
+
+  def addPerson() = Action { implicit request =>
+    val person = personForm.bindFromRequest.get
+    Repository.insertPerson(person)
+    Redirect(routes.Application.persons())
   }
 
   val personForm: Form[Person] = Form {

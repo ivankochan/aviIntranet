@@ -5,27 +5,35 @@ import reactivemongo.bson.BSONDocument
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 object Repository {
-  def getDb(): reactivemongo.api.DefaultDB = {
-    import reactivemongo.api._
-    import scala.concurrent.ExecutionContext.Implicits.global
+  private val PERSONS_COL_NAME = "persons"
+  private val TEAMS_COL_NAME = "teams"
 
-    // gets an instance of the driver
-    // (creates an actor system)
+  lazy val personsCollection: BSONCollection = db(PERSONS_COL_NAME)
+  lazy val teamsCollection: BSONCollection = db(TEAMS_COL_NAME)
+
+  private def db: reactivemongo.api.DefaultDB = {
+    import reactivemongo.api._
+
     val driver = new MongoDriver
     val connection = driver.connection(List("localhost"))
-
-    // Gets a reference to the database "plugin"
-      connection("intranetDb")
-
+    connection("intranetDb")
   }
 
   def persons = {
     implicit val reader = Person.PersonReader
-    val db = getDb()
-
-    val collection: BSONCollection = db("users")
 
     val query = BSONDocument("$query" -> BSONDocument())
-    collection.find(query).cursor[Person].collect[List]()
+    personsCollection.find(query).cursor[Person].collect[List]()
+  }
+
+  def insertPerson(person: Person) = {
+    personsCollection.insert(person)
+  }
+
+  def teams = {
+    implicit val reader = Team.TeamReader
+
+    val query = BSONDocument("$query" -> BSONDocument())
+    teamsCollection.find(query).cursor[Team].collect[List]()
   }
 }

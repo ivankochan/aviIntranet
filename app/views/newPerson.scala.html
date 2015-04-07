@@ -1,0 +1,15 @@
+@(personForm: Form[models.Person], teams: List[Team])
+
+@main("New Person") {
+    <form action="@routes.Application.addPerson()" method="post">
+        <input name="firstName" type="text">
+        <input name="lastName" type="text">
+        <select name="team" >
+            @teams.map { t =>
+                <option>@t.name</option>
+            }
+        </select>
+        <input name="position" type="text">
+        <button>Add person</button>
+    </form>
+}
